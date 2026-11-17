@@ -1,0 +1,97 @@
+﻿@model _25DH110604_LTW.Order
+@{
+    ViewBag.Title = "Chi tiết đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <h2 style="font-weight: bold; text-transform: uppercase;">CHI TIẾT ĐƠN HÀNG</h2>
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-success">@TempData["Message"]</div>
+    }
+
+    <div class="panel panel-primary">
+        <div class="panel-heading"><b>THÔNG TIN ĐƠN HÀNG</b></div>
+        <div class="panel-body">
+            <table class="table table-bordered table-striped">
+                <tr>
+                    <th style="width: 250px;">Ngày đặt hàng</th>
+                    <td>@Model.OrderDate.ToString("dd/MM/yyyy")</td>
+                </tr>
+                <tr>
+                    <th>Tên khách hàng</th>
+                  
+                    <td>@Model.Customer.CustomerName</td>
+                </tr>
+                <tr>
+                    <th>Tổng giá trị</th>
+                    <td><strong style="color: red;">@Model.TotalAmount.ToString("N2") VNĐ</strong></td>
+                </tr>
+                <tr>
+                    <th>Phương thức thanh toán</th>
+                
+                    <td>@Model.PaymentMethod</td>
+                </tr>
+                <tr>
+                    <th>Trạng thái thanh toán</th>
+                    <td>
+                        @if (Model.PaymentStatus == "Chưa thanh toán")
+                        {
+                            <span class="label label-warning">@Model.PaymentStatus</span>
+                        }
+                        else
+                        {
+                            <span class="label label-success">@Model.PaymentStatus</span>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <th>Phương thức giao hàng</th>
+                    <td>@Model.ShippingMethod</td>
+                </tr>
+                <tr>
+                    <th>Địa chỉ giao hàng</th>
+               
+                    <td>@Model.ShippingAddress</td>
+                </tr>
+            </table>
+
+            <a href="@Url.Action("UpdateStatus", new { id = Model.OrderID })" class="btn btn-warning">
+                <i class="fa fa-edit"></i> Cập nhật trạng thái
+            </a>
+            <a href="@Url.Action("Index")" class="btn btn-default">Quay lại danh sách</a>
+        </div>
+    </div>
+
+    <!-- Danh sách sản phẩm -->
+    <div class="panel panel-info">
+        <div class="panel-heading"><b>DANH SÁCH SẢN PHẨM</b></div>
+        <div class="panel-body">
+            <table class="table table-bordered">
+                <thead>
+                    <tr style="background-color: #f1f1f1;">
+                        <th>Sản phẩm</th>
+                        <th>Số lượng</th>
+                        <th>Đơn giá</th>
+                        <th>Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var detail in Model.OrderDetails)
+                    {
+                        <tr>
+                      
+                            <td>@detail.Product.ProductName</td>
+                            <td>@detail.Quantity</td>
+                            <td>@detail.UnitPrice.ToString("N2")</td>
+                            
+                            <td>@((detail.Quantity * detail.UnitPrice).ToString("N2"))</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
